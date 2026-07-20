@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bukti Serah Terima Barang</title>
+
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<!-- JPG -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    padding:25px;
+    background:#d9d8d3;
+}
+
+/* CONTAINER */
+.container{
+    width:1400px;
+    margin:auto;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+
+/* FORM */
+.form-panel{
+    width:340px;
+    background:white;
+    padding:25px;
+    border-radius:24px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    height:fit-content;
+}
+
+.form-panel h2{
+    margin-top:0;
+    color:#174943;
+    font-size:30px;
+}
+
+.group{
+    margin-bottom:16px;
+}
+
+.group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+    color:#174943;
+}
+
+.group input{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:2px solid #c9d0ce;
+    font-size:15px;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    background:#174943;
+    color:white;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+/* PREVIEW */
+/* TAMBAHIN DI CSS */
+
+.preview{
+    width:277mm;
+    min-height:190mm;
+
+    background:#f7f7f5;
+    border-radius:32px;
+    padding:20px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+
+    overflow:hidden;
+}
+
+#a4{
+    width:210mm;
+    height:297mm;
+    margin:auto;
+    background:#fff;
+    padding:5mm;
+    position:relative;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+/* A5 */
+.a5-sheet{
+    width:100%;
+    height:136mm;
+
+    background:#f7f7f5;
+
+    border-radius:18px;
+
+    padding:10px;
+
+    overflow:hidden;
+
+    margin-bottom:4mm;
+}
+
+/* GARIS POTONG */
+.cut-line{
+
+    width:100%;
+
+    border-top:2px dashed #777;
+
+    margin:7mm 0;
+}
+
+/* HEADER */
+.top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+}
+
+/* LOGO */
+.logo-area h1{
+
+    margin:0;
+
+    font-size:34px;
+
+    letter-spacing:4px;
+
+    color:#173f3a;
+}
+
+.logo-area h2{
+
+    margin:0;
+
+    font-size:18px;
+}
+
+.logo-area p{
+
+    margin-top:6px;
+
+    line-height:1.2;
+
+    font-size:11px;
+}
+
+/* DOC */
+.doc-area{
+
+    width:240px;
+}
+
+.doc-box{
+
+    border:1px solid #ccd1cf;
+
+    border-radius:8px;
+
+    padding:8px;
+
+    margin-bottom:8px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:11px;
+
+    background:white;
+}
+
+/* TITLE */
+.title-box{
+
+    margin-top:8px;
+
+    background:white;
+
+    display:inline-block;
+
+    padding:10px 18px;
+
+    border-radius:16px;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    line-height:1;
+
+    color:#174943;
+}
+
+/* DETAIL */
+.detail{
+
+    margin-top:10px;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+}
+
+.detail-card{
+
+    background:white;
+
+    padding:10px;
+
+    border-radius:12px;
+
+    font-size:11px;
+}
+
+.detail-card h3{
+
+    margin:0 0 6px;
+
+    font-size:12px;
+}
+
+/* TABLE */
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:10px;
+
+    font-family:Arial,sans-serif;
+}
+
+th{
+
+    background:#e7e7e2;
+
+    border:1px solid #ccd1cf;
+
+    padding:6px;
+
+    font-size:11px;
+
+    text-align:center;
+
+    vertical-align:middle;
+}
+
+td{
+
+    border:1px solid #ccd1cf;
+
+    height:24px;
+
+    background:white;
+
+    font-size:11px;
+
+    text-align:center;
+
+    vertical-align:middle;
+
+    padding:4px;
+}
+
+/* TTD */
+.ttd{
+
+    margin-top:10px;
+
+    display:flex;
+
+    gap:15px;
+}
+
+.ttd-box{
+
+    flex:1;
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:6px;
+
+    text-align:center;
+
+    font-size:10px;
+}
+.ttd-title{
+
+    margin-bottom:5px;
+
+    font-weight:bold;
+}
+
+/* HIDE BUTTONS ON EXPORT */
+.hide-export{
+    display:none !important;
+}
+#a4{
+    height:297mm !important;
+    max-height:297mm !important;
+    overflow:hidden !important;
+}
+    
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- FORM -->
+    <div class="form-panel">
+
+        <h2>Form Isian</h2>
+
+        <div class="group">
+            <label>Yang Menerima</label>
+            <input type="text" id="penerima" value="">
+        </div>
+
+        <div class="group">
+            <label>Yang Menyerahkan</label>
+            <input type="text" id="penyerah" value="">
+        </div>
+
+        <div class="group">
+            <label>Tanggal Diserahkan</label>
+          <input type="date" id="tgl">
+        </div>
+
+        <div class="group">
+            <label>Rencana Pengembalian</label>
+            <input type="date" id="kembali">
+        </div>
+
+        <div class="group">
+            <label>No Document</label>
+           <input type="text" id="doc" readonly>
+        </div>
+<h3>Data Barang</h3>
+
+<div id="barangContainer">
+
+    <div class="barang-item">
+
+        <div class="group">
+            <label>Nama Barang</label>
+            <input type="text" class="barang">
+        </div>
+
+        <div class="group">
+            <label>Jumlah</label>
+            <input type="number" class="jumlah">
+        </div>
+
+        <div class="group">
+            <label>Sediaan</label>
+            <input type="text" class="sediaan">
+        </div>
+
+        <hr>
+
+    </div>
+
+</div>
+        <button type="button" onclick="tambahBarang()">
+    + TAMBAH BARANG
+</button>
+        <button onclick="updatePreview()">
+            UPDATE PREVIEW
+        </button>
+        <button onclick="refreshForm()">
+    REFRESH FORM
+</button>
+     
+        
+        <button onclick="downloadPDF()">
+            EXPORT PDF
+        </button>
+
+        <button onclick="downloadJPG()">
+            EXPORT JPG
+        </button>
+
+    </div>
+
+    <!-- PREVIEW -->
+  <!-- PREVIEW A4 -->
+<div id="a4">
+
+    <!-- ========================= -->
+    <!-- BUKTI SERAH TERIMA ATAS -->
+    <!-- ========================= -->
+
+    <div class="a5-sheet">
+
+        <!-- HEADER -->
+        <div class="top">
+
+            <div class="logo-area">
+
+                <h1>MAYAPADA</h1>
+
+                <h2>Hospital Bogor</h2>
+
+                <p>
+                    Jl. Pajajaran Indah V No.97,<br>
+                    RT.01/RW.11, Baranangsiang, Kota Bogor
+                </p>
+
+            </div>
+
+            <div class="doc-area">
+
+                <div class="doc-box">
+                    <span>No Document :</span>
+                    <div id="viewDoc"></div>
+                </div>
+
+                <div class="doc-box">
+                    <span>Tanggal :</span>
+                    <div id="viewTgl"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TITLE -->
+        <div class="title-box">
+            Bukti Serah<br>
+            Terima Barang
+        </div>
+
+        <!-- DETAIL -->
+        <div class="detail">
+
+            <div class="detail-card">
+
+                <h3>Detail Penyerahan</h3>
+
+                <div class="detail-item">
+                    <b>Yang Menerima</b>
+                    <div id="viewPenerima">
+                        
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <b>Yang Menyerahkan</b>
+                    <div id="viewPenyerah">
+                        
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="detail-card">
+
+                <h3>Informasi Tanggal</h3>
+
+                <div class="detail-item">
+                    <b>Tanggal Diserahkan</b>
+                    <div id="viewTanggal">
+                       
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <b>Rencana Pengembalian</b>
+                    <div id="viewKembali">
+                        
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+    <table>
+
+    <thead>
+        <tr>
+            <th>NAMA BARANG</th>
+            <th>JUMLAH</th>
+            <th>SEDIAAN</th>
+        </tr>
+    </thead>
+
+    <tbody id="tableBodyA">
+    </tbody>
+
+</table>
+
+        <!-- TTD -->
+     <!-- TTD -->
+<div class="ttd">
+
+    <div class="ttd-box">
+
+        <div class="ttd-title">
+            Yang Menerima
+        </div>
+
+        <br><br><br>
+
+        ____________________
+
+    </div>
+
+    <div class="ttd-box">
+
+        <div class="ttd-title">
+            Yang Menyerahkan
+        </div>
+
+        <br><br><br>
+
+        ____________________
+
+    </div>
+
+    <div class="ttd-box">
+
+        <div class="ttd-title">
+            Mengetahui
+        </div>
+
+        <br><br><br>
+
+        <b>
+            Apt. Nurma Ainaya, S. Farm
+        </b>
+
+    </div>
+
+</div>
+
+    </div>
+
+    <!-- GARIS POTONG -->
+    <div class="cut-line"></div>
+
+<!-- ========================= -->
+<!-- BUKTI SERAH TERIMA BAWAH -->
+<!-- ========================= -->
+
+<div class="a5-sheet">
+
+    <!-- HEADER -->
+    <div class="top">
+
+        <div class="logo-area">
+
+            <h1>MAYAPADA</h1>
+
+            <h2>Hospital Bogor</h2>
+
+            <p>
+                Jl. Pajajaran Indah V No.97,<br>
+                RT.01/RW.11, Baranangsiang, Kota Bogor
+            </p>
+
+        </div>
+
+        <div class="doc-area">
+
+            <div class="doc-box">
+                <span>No Document :</span>
+                <div id="viewDocB"></div>
+            </div>
+
+            <div class="doc-box">
+                <span>Tanggal :</span>
+                <div id="viewTglB"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TITLE -->
+    <div class="title-box">
+        Bukti Serah<br>
+        Terima Barang
+    </div>
+
+    <!-- DETAIL -->
+    <div class="detail">
+
+        <div class="detail-card">
+
+            <h3>Detail Penyerahan</h3>
+
+            <div class="detail-item">
+                <b>Yang Menerima</b>
+                <div id="viewPenerimaB"></div>
+            </div>
+
+            <div class="detail-item">
+                <b>Yang Menyerahkan</b>
+                <div id="viewPenyerahB"></div>
+            </div>
+
+        </div>
+
+        <div class="detail-card">
+
+            <h3>Informasi Tanggal</h3>
+
+            <div class="detail-item">
+                <b>Tanggal Diserahkan</b>
+                <div id="viewTanggalB"></div>
+            </div>
+
+            <div class="detail-item">
+                <b>Rencana Pengembalian</b>
+                <div id="viewKembaliB"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <table>
+
+    <thead>
+        <tr>
+            <th>NAMA BARANG</th>
+            <th>JUMLAH</th>
+            <th>SEDIAAN</th>
+        </tr>
+    </thead>
+
+    <tbody id="tableBodyB">
+    </tbody>
+
+</table>
+
+     
+    <!-- TTD -->
+  <!-- TTD -->
+<div class="ttd">
+
+    <div class="ttd-box">
+
+        <div class="ttd-title">
+            Yang Menerima
+        </div>
+
+        <br><br><br>
+
+        ____________________
+
+    </div>
+
+    <div class="ttd-box">
+
+        <div class="ttd-title">
+            Yang Menyerahkan
+        </div>
+
+        <br><br><br>
+
+        ____________________
+
+    </div>
+
+    <div class="ttd-box">
+
+        <div class="ttd-title">
+            Mengetahui
+        </div>
+
+        <br><br><br>
+
+        <b>
+            Apt. Nurma Ainaya, S. Farm
+        </b>
+
+    </div>
+
+</div>
+
+    </div>
+
+</div> <!-- PENUTUP A5 BAWAH -->
+
+</div> <!-- PENUTUP A4 -->
+
+<script>
+
+function tambahBarang(){
+
+    const container = document.getElementById("barangContainer");
+
+    const div = document.createElement("div");
+
+    div.className = "barang-item";
+
+    div.innerHTML = `
+
+        <div class="group">
+            <label>Nama Barang</label>
+            <input type="text" class="barang">
+        </div>
+
+        <div class="group">
+            <label>Jumlah</label>
+            <input type="number" class="jumlah">
+        </div>
+
+        <div class="group">
+            <label>Sediaan</label>
+            <input type="text" class="sediaan">
+        </div>
+
+        <button type="button"
+        onclick="hapusBarang(this)">
+        HAPUS
+        </button>
+
+        <hr>
+    `;
+
+    container.appendChild(div);
+}
+
+function hapusBarang(btn){
+
+    btn.parentElement.remove();
+
+    updatePreview();
+}
+
+function updatePreview(){
+
+    // ===== DATA UTAMA =====
+
+    const penerima = document.getElementById("penerima").value;
+    const penyerah = document.getElementById("penyerah").value;
+
+    const tglRaw = document.getElementById("tgl").value;
+    const kembaliRaw = document.getElementById("kembali").value;
+
+    const doc = document.getElementById("doc").value;
+
+    const tgl = tglRaw
+    ? new Date(tglRaw).toLocaleDateString('id-ID',{
+        day:'2-digit',
+        month:'long',
+        year:'numeric'
+    })
+    : "";
+
+    const kembali = kembaliRaw
+    ? new Date(kembaliRaw).toLocaleDateString('id-ID',{
+        day:'2-digit',
+        month:'long',
+        year:'numeric'
+    })
+    : "";
+
+    // ===== PREVIEW ATAS =====
+
+    document.getElementById("viewPenerima").innerText = penerima;
+    document.getElementById("viewPenyerah").innerText = penyerah;
+    document.getElementById("viewTanggal").innerText = tgl;
+    document.getElementById("viewKembali").innerText = kembali;
+    document.getElementById("viewDoc").innerText = doc;
+    document.getElementById("viewTgl").innerText = tgl;
+
+    // ===== PREVIEW BAWAH =====
+
+    document.getElementById("viewPenerimaB").innerText = penerima;
+    document.getElementById("viewPenyerahB").innerText = penyerah;
+    document.getElementById("viewTanggalB").innerText = tgl;
+    document.getElementById("viewKembaliB").innerText = kembali;
+    document.getElementById("viewDocB").innerText = doc;
+    document.getElementById("viewTglB").innerText = tgl;
+
+    // ===== TABEL =====
+
+    const barang = document.querySelectorAll(".barang");
+    const jumlah = document.querySelectorAll(".jumlah");
+    const sediaan = document.querySelectorAll(".sediaan");
+
+    let html = "";
+
+    for(let i = 0; i < barang.length; i++){
+
+        html += `
+        <tr>
+            <td>${barang[i].value}</td>
+            <td>${jumlah[i].value}</td>
+            <td>${sediaan[i].value}</td>
+        </tr>
+        `;
+    }
+
+    document.getElementById("tableBodyA").innerHTML = html;
+    document.getElementById("tableBodyB").innerHTML = html;
+}
+
+/* PDF */
+function downloadPDF(){
+
+    const element = document.getElementById("a4");
+
+    const opt = {
+
+        margin:0,
+
+        filename: document.getElementById("doc").value + '.pdf',
+
+        image:{
+            type:'jpeg',
+            quality:1
+        },
+
+        html2canvas:{
+            scale:2,
+            useCORS:true
+        },
+
+        jsPDF:{
+            unit:'mm',
+            format:'a4',
+            orientation:'portrait'
+        },
+
+        pagebreak:{
+    mode:'avoid-all'
+}
+
+    };
+
+    html2pdf()
+.set({
+    margin:0,
+    filename: document.getElementById("doc").value + '.pdf',
+    image:{
+        type:'jpeg',
+        quality:1
+    },
+    html2canvas:{
+        scale:1.5,
+        useCORS:true,
+        scrollY:0
+    },
+    jsPDF:{
+        unit:'mm',
+        format:'a4',
+        orientation:'portrait'
+    },
+    pagebreak:{
+        mode:[]
+    }
+})
+.from(element)
+.toPdf()
+.get('pdf')
+.then(function(pdf){
+    if(pdf.internal.getNumberOfPages() > 1){
+        pdf.deletePage(2);
+    }
+})
+.save();
+}
+
+/* JPG */
+function downloadJPG(){
+
+    html2canvas(document.querySelector("#a4"),{
+        scale:2
+    }).then(canvas => {
+
+        let link = document.createElement("a");
+
+        link.download = "Bukti-Serah-Terima.jpg";
+
+        link.href = canvas.toDataURL("image/jpeg",1);
+
+        link.click();
+
+    });
+
+}
+/* AUTO NOMOR DOCUMENT */
+
+/* AUTO NOMOR DOCUMENT BERURUT */
+
+function generateDocumentNumber(){
+
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2,'0');
+
+    const month = String(now.getMonth()+1).padStart(2,'0');
+
+    const year = now.getFullYear();
+
+    /* AMBIL NOMOR TERAKHIR */
+    let lastNumber = localStorage.getItem("bst_number");
+
+    if(!lastNumber){
+        lastNumber = 1;
+    }else{
+        lastNumber = parseInt(lastNumber) + 1;
+    }
+
+    /* SIMPAN NOMOR BARU */
+    localStorage.setItem("bst_number", lastNumber);
+
+    /* FORMAT 0001 */
+    const urut = String(lastNumber).padStart(4,'0');
+
+    /* HASIL NOMOR */
+    const nomor = `BST/${urut}/${day}${month}${year}`;
+
+    /* INPUT */
+    document.getElementById("doc").value = nomor;
+
+    /* PREVIEW */
+    document.getElementById("viewDoc").innerText = nomor;
+}
+
+/* AUTO JALAN */
+generateDocumentNumber();
+   function refreshForm(){
+
+    // =========================
+    // RESET INPUT UTAMA
+    // =========================
+
+    document.getElementById("penerima").value = "";
+    document.getElementById("penyerah").value = "";
+
+    // =========================
+    // AUTO TANGGAL HARI INI
+    // =========================
+
+    const today = new Date();
+
+    document.getElementById("tgl").value =
+    today.toISOString().split('T')[0];
+
+    // =========================
+    // AUTO +7 HARI
+    // =========================
+
+    let next7 = new Date();
+
+    next7.setDate(next7.getDate() + 7);
+
+    document.getElementById("kembali").value =
+    next7.toISOString().split('T')[0];
+
+// =========================
+    // KOSONGKAN TANGGAL
+    // =========================
+
+    document.getElementById("tgl").value = "";
+    document.getElementById("kembali").value = "";
+
+    // =========================
+    // HAPUS SEMUA BARANG
+    // =========================
+
+    document.getElementById("barangContainer").innerHTML = `
+
+    <div class="barang-item">
+
+        <div class="group">
+            <label>Nama Barang</label>
+            <input type="text" class="barang">
+        </div>
+
+        <div class="group">
+            <label>Jumlah</label>
+            <input type="number" class="jumlah">
+        </div>
+
+        <div class="group">
+            <label>Sediaan</label>
+            <input type="text" class="sediaan">
+        </div>
+
+        <hr>
+
+    </div>
+    `;
+
+    // =========================
+    // GENERATE NOMOR BARU
+    // =========================
+
+    generateDocumentNumber();
+
+    // =========================
+    // RESET PREVIEW ATAS
+    // =========================
+
+    document.getElementById("viewPenerima").innerText = "";
+    document.getElementById("viewPenyerah").innerText = "";
+    document.getElementById("viewTanggal").innerText = "";
+    document.getElementById("viewKembali").innerText = "";
+
+    document.getElementById("viewDoc").innerText =
+    document.getElementById("doc").value;
+
+    document.getElementById("viewTgl").innerText = "";
+
+    // =========================
+    // RESET PREVIEW BAWAH
+    // =========================
+
+    document.getElementById("viewPenerimaB").innerText = "";
+    document.getElementById("viewPenyerahB").innerText = "";
+    document.getElementById("viewTanggalB").innerText = "";
+    document.getElementById("viewKembaliB").innerText = "";
+
+    document.getElementById("viewDocB").innerText =
+    document.getElementById("doc").value;
+
+    document.getElementById("viewTglB").innerText = "";
+
+    // =========================
+    // RESET TABEL
+    // =========================
+
+    document.getElementById("tableBodyA").innerHTML = "";
+    document.getElementById("tableBodyB").innerHTML = "";
+
+    // =========================
+    // AUTO UPDATE PREVIEW
+    // =========================
+
+    updatePreview();
+}
+    
+</script>
+
+</body>
+</html>
