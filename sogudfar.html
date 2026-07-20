@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Pre Stok Opname Gudang Farmasi MHBG</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{
+    --navy:#0F172A;
+    --blue:#2563EB;
+    --bg:#F1F5F9;
+    --white:#FFFFFF;
+    --border:#E2E8F0;
+    --text:#334155;
+    --shadow:0 8px 20px rgba(15,23,42,.08);
+    --radius:14px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    padding:25px;
+    color:var(--text);
+}
+
+.container{
+    max-width:1300px;
+    margin:auto;
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:30px;
+}
+
+.header{
+    background:#0F172A;
+    color:#fff;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    margin-bottom:25px;
+    box-shadow:0 8px 20px rgba(15,23,42,.15);
+}
+
+.header h1{
+    font-size:32px;
+    font-weight:700;
+    letter-spacing:2px;
+    margin:0;
+}
+
+.header .garis{
+    width:450px;
+    height:2px;
+    background:#fff;
+    margin:12px auto;
+    border-radius:20px;
+}
+
+.header p{
+    margin:0;
+    font-size:16px;
+    font-weight:400;
+    letter-spacing:.5px;
+    color:#E2E8F0;
+}
+
+.search-box{
+    width:100%;
+    padding:15px 20px;
+    border:1px solid var(--border);
+    border-radius:40px;
+    font-size:15px;
+    transition:.3s;
+    margin-bottom:15px;
+}
+
+.search-box:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 4px rgba(37,99,235,.15);
+    outline:none;
+}
+
+.upload{
+    background:#F8FAFC;
+    border:2px dashed #CBD5E1;
+    padding:18px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+.form-info{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    font-weight:600;
+    margin-bottom:6px;
+    color:#334155;
+    font-size:14px;
+}
+
+.form-group input{
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:14px;
+    background:#fff;
+}
+
+.form-group input:focus{
+    border-color:#0F172A;
+    outline:none;
+    box-shadow:0 0 0 3px rgba(15,23,42,.08);
+}
+button{
+    background:#0F172A;
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:.25s;
+    box-shadow:0 4px 12px rgba(15,23,42,.15);
+}
+
+button:hover{
+    background:#1E293B;
+    transform:translateY(-2px);
+}
+
+button:active{
+    transform:translateY(0);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+thead th{
+    background:var(--navy);
+    color:white;
+    padding:14px;
+}
+
+tbody td{
+    padding:12px;
+    border-bottom:1px solid #E5E7EB;
+}
+
+tbody tr:hover{
+    background:#F8FAFC;
+}
+
+.total-box{
+    background:#EFF6FF;
+    color:#1E3A8A;
+    padding:12px;
+    border-radius:10px;
+    margin-top:15px;
+    text-align:right;
+    font-weight:bold;
+}
+    .btnEdit{
+    background:#F59E0B;
+    color:#fff;
+    padding:7px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600;
+}
+
+.btnEdit:hover{
+    background:#D97706;
+}
+    .lebih{
+    background:#DCFCE7;
+}
+
+.kurang{
+    background:#FEE2E2;
+}
+
+.normal{
+    background:#FEF9C3;
+}
+
+.success{
+    color:#16A34A;
+    font-weight:600;
+    margin-top:10px;
+}
+    .form-group select{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+    font-size:14px;
+    color:#334155;
+    outline:none;
+    transition:.3s;
+}
+
+.form-group select:focus{
+    border-color:#0F172A;
+    box-shadow:0 0 0 3px rgba(15,23,42,.08);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="header">
+    <h1>RANDOM STOK MINGGUAN</h1>
+    <div class="garis"></div>
+    <p>Gudang Farmasi</p>
+</div>
+<div class="form-info">
+
+    <div class="form-group">
+        <label> Tanggal</label>
+        <input type="date" id="tanggal">
+    </div>
+
+    <div class="form-group">
+    <label>Petugas Hitung</label>
+    <select id="petugasHitung">
+        <option value="">-- Pilih Petugas --</option>
+        <option>DADAN SUNGKAWA</option>
+        <option>NURMA AINAYA</option>
+        <option>ARIES PRIANTONO</option>
+        <option>IRWANDI SOLEHUDIN</option>
+    </select>
+</div>
+
+    <div class="form-group">
+    <label>Petugas Input</label>
+    <select id="petugasInput">
+        <option value="">-- Pilih Petugas --</option>
+        <option>DADAN SUNGKAWA</option>
+        <option>NURMA AINAYA</option>
+        <option>ARIES PRIANTONO</option>
+        <option>IRWANDI SOLEHUDIN</option>
+    </select>
+</div>
+
+</div>
+<input type="text" id="searchInput" class="search-box"
+placeholder="Ketik Nama Obat..."
+onkeyup="searchObat()">
+
+<div id="searchResult"></div>
+
+<div class="upload">
+<input type="file" id="fileInput" accept=".xlsx,.xls" onchange="uploadFile()">
+<div id="notif" class="success"></div>
+</div>
+
+<table id="resultTable">
+<thead>
+<tr>
+<th>Kode</th>
+<th>Nama Obat</th>
+<th>Stok Sistem</th>
+<th>Stok Fisik</th>
+<th>Selisih</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<div class="total-box" id="totalSelisih"></div>
+
+<br>
+<button onclick="saveData()">SIMPAN</button>
+<button onclick="exportExcel()">EXPORT EXCEL</button>
+<button onclick="refreshPage()">REFRESH</button>
+<button onclick="exportPDF()">EXPORT PDF</button>
+</div>
+
+<script>
+let obatIndex = [];
+let hasilOpname = [];
+let debounceTimer;
+
+// ================= UPLOAD + INDEXING =================
+function uploadFile(){
+    const file = document.getElementById('fileInput').files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data,{type:'array'});
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const raw = XLSX.utils.sheet_to_json(sheet,{header:1});
+
+        obatIndex = [];
+
+        for(let i=1;i<raw.length;i++){
+            let row = raw[i];
+            if(row[2] && row[3]){
+                obatIndex.push({
+                    kode: row[2],
+                    nama: row[3].toString(),
+                    namaLower: row[3].toString().toLowerCase(),
+                    sistem: parseInt(row[10]) || 0
+                });
+            }
+        }
+
+        document.getElementById("notif").innerHTML =
+        "✔ File berhasil di upload (" + obatIndex.length + " item)";
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+// ================= SEARCH SUPER CEPAT =================
+function searchObat(){
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(()=>{
+        const keyword = document.getElementById('searchInput')
+        .value.toLowerCase().trim();
+
+        const resultDiv = document.getElementById("searchResult");
+
+        if(!obatIndex.length){
+            resultDiv.innerHTML =
+            "<p style='color:red'> Upload file Dulu GAES</p>";
+            return;
+        }
+
+        if(keyword.length < 2){
+            resultDiv.innerHTML = "";
+            return;
+        }
+
+        let hasil = [];
+        for(let i=0;i<obatIndex.length;i++){
+            if(obatIndex[i].namaLower.includes(keyword)){
+                hasil.push(obatIndex[i]);
+            }
+            if(hasil.length >= 15) break;
+        }
+
+        if(!hasil.length){
+            resultDiv.innerHTML = "<p>Tidak ditemukan</p>";
+            return;
+        }
+
+        let html = `
+        <table>
+        <tr>
+        <th>Kode</th>
+        <th>Nama</th>
+        <th>Stok Sistem</th>
+        <th>Input Fisik</th>
+        <th>Aksi</th>
+        </tr>`;
+
+        hasil.forEach((item,index)=>{
+            html+=`
+            <tr>
+            <td>${item.kode}</td>
+            <td>${item.nama}</td>
+            <td>${item.sistem}</td>
+            <td>
+            <input type="number" id="fisik${index}" style="width:80px">
+            </td>
+            <td>
+            <button onclick="tambahData('${item.kode}',${item.sistem},'${item.nama}',${index})">
+            Tambah
+            </button>
+            </td>
+            </tr>`;
+        });
+
+        html+="</table>";
+        resultDiv.innerHTML=html;
+
+    },250);
+}
+
+// ================= TAMBAH DATA =================
+function tambahData(kode,sistem,nama,index){
+    const fisik = parseInt(
+    document.getElementById("fisik"+index).value) || 0;
+
+    const selisih = fisik - sistem;
+
+    hasilOpname.push({kode,nama,sistem,fisik,selisih});
+    renderTable();
+}
+
+// ================= RENDER HASIL =================
+function renderTable(){
+    const tbody =
+    document.querySelector("#resultTable tbody");
+    tbody.innerHTML="";
+    let total=0;
+
+    hasilOpname.forEach((item,index)=>{
+        let kelas="normal";
+        if(item.selisih>0) kelas="lebih";
+        if(item.selisih<0) kelas="kurang";
+        total+=item.selisih;
+
+        tbody.innerHTML += `
+<tr class="${kelas}">
+    <td>${item.kode}</td>
+    <td>${item.nama}</td>
+    <td>${item.sistem}</td>
+    <td>${item.fisik}</td>
+    <td>${item.selisih}</td>
+
+    <td>
+        <button class="btnEdit" onclick="editData(${index})">
+             Edit
+        </button>
+    </td>
+</tr>`;
+    });
+
+    document.getElementById("totalSelisih")
+    .innerText="Total Selisih : "+total;
+}
+
+// ================= SIMPAN =================
+function saveData(){
+    localStorage.setItem("stokOpname",
+    JSON.stringify(hasilOpname));
+    alert("Data berhasil disimpan bro 🔥");
+}
+
+// ================= EXPORT EXCEL =================
+function exportExcel(){
+    const dataExport = hasilOpname.map(item=>({
+        "Kode Obat":item.kode,
+        "Nama Obat":item.nama,
+        "Stok Sistem":item.sistem,
+        "Stok Fisik":item.fisik,
+        "Selisih":item.selisih
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,"Stok Opname");
+    XLSX.writeFile(wb,
+    "Hasil_Stok_Opname_MHBG.xlsx");
+}
+
+// ================= REFRESH =================
+function refreshPage(){
+    location.reload();
+}
+            function editData(index){
+
+    let data = hasilOpname[index];
+
+    let stokBaru = prompt(
+        "Ubah Stok Fisik :", data.fisik
+    );
+
+    if(stokBaru===null) return;
+
+    data.fisik = parseInt(stokBaru);
+
+    data.selisih = data.fisik - data.sistem;
+
+    renderTable();
+
+}
+    async function exportPDF(){
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF("p","mm","a4");
+
+    // ==========================
+    // HEADER
+    // ==========================
+
+    doc.setFillColor(15,23,42);
+    doc.rect(0,0,210,25,"F");
+
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(16);
+    doc.setFont("helvetica","bold");
+    doc.text("RANDOM STOK GUDANG FARMASI",105,10,{align:"center"});
+
+    doc.setFontSize(11);
+    doc.text("Mayapada Hospital Bogor",105,18,{align:"center"});
+
+    // ==========================
+    // INFO
+    // ==========================
+
+    doc.setTextColor(0,0,0);
+
+    let tanggal=document.getElementById("tanggal").value;
+    let hitung=document.getElementById("petugasHitung").value;
+    let input=document.getElementById("petugasInput").value;
+
+    doc.setFontSize(10);
+
+    doc.text("Tanggal",15,35);
+    doc.text(": "+tanggal,45,35);
+
+    doc.text("Petugas Hitung",15,42);
+    doc.text(": "+hitung,45,42);
+
+    doc.text("Petugas Input",15,49);
+    doc.text(": "+input,45,49);
+
+    // ==========================
+    // DATA
+    // ==========================
+
+    let body=[];
+
+    hasilOpname.forEach((item,i)=>{
+
+        body.push([
+            i+1,
+            item.kode,
+            item.nama,
+            item.sistem,
+            item.fisik,
+            item.selisih
+        ]);
+
+    });
+
+    doc.autoTable({
+    startY:60,
+
+    head:[[
+        "No",
+        "Kode",
+        "Nama Obat",
+        "Stok Sistem",
+        "Stok Fisik",
+        "Selisih"
+    ]],
+
+    body:body,
+
+    headStyles:{
+        fillColor:[15,23,42],
+        textColor:[255,255,255],
+        halign:"center"
+    },
+
+    styles:{
+        fontSize:9,
+        cellPadding:2,
+        lineColor:[220,220,220],
+        lineWidth:0.2
+    },
+
+    didParseCell:function(data){
+
+        // Kolom Selisih (kolom ke-5)
+        if(data.section==="body" && data.column.index===5){
+
+            let nilai = Number(data.cell.raw);
+
+            if(nilai > 0){
+                data.cell.styles.fillColor=[220,252,231]; // Hijau muda
+                data.cell.styles.textColor=[22,101,52];
+                data.cell.styles.fontStyle="bold";
+            }
+            else if(nilai < 0){
+                data.cell.styles.fillColor=[254,226,226]; // Merah muda
+                data.cell.styles.textColor=[153,27,27];
+                data.cell.styles.fontStyle="bold";
+            }
+            else{
+                data.cell.styles.fillColor=[254,249,195]; // Kuning muda
+                data.cell.styles.textColor=[133,77,14];
+                data.cell.styles.fontStyle="bold";
+            }
+        }
+
+    }
+
+});
+
+    let y=doc.lastAutoTable.finalY+10;
+
+    doc.setFont("helvetica","bold");
+doc.setFontSize(10);
+
+doc.text("Jumlah Item : " + hasilOpname.length,15,y);
+
+    // ==========================
+    // TTD
+    // ==========================
+
+// ==========================
+// TANDA TANGAN
+// ==========================
+
+y += 18;
+
+doc.setFont("helvetica","bold");
+doc.setFontSize(11);
+doc.text("Mengetahui",105,y,{align:"center"});
+
+y += 8;
+
+// =====================================================
+// PETUGAS HITUNG
+// =====================================================
+
+// Kotak luar
+doc.setDrawColor(170);
+doc.setLineWidth(0.3);
+doc.roundedRect(30,y,60,30,2,2);
+
+// Header Navy
+doc.setFillColor(15,23,42);
+doc.roundedRect(30,y,60,7,2,2,"F");
+
+// Judul
+doc.setTextColor(255,255,255);
+doc.setFontSize(9);
+doc.text("PETUGAS HITUNG",60,y+4.8,{align:"center"});
+
+// Isi
+doc.setTextColor(0,0,0);
+
+// Garis TTD
+doc.line(38,y+20,82,y+20);
+
+// Nama
+doc.setFont("helvetica","bold");
+doc.setFontSize(9);
+doc.text(hitung,60,y+27,{align:"center"});
+
+
+// =====================================================
+// PETUGAS INPUT
+// =====================================================
+
+// Kotak luar
+doc.roundedRect(120,y,60,30,2,2);
+
+// Header Navy
+doc.setFillColor(15,23,42);
+doc.roundedRect(120,y,60,7,2,2,"F");
+
+// Judul
+doc.setTextColor(255,255,255);
+doc.text("PETUGAS INPUT",150,y+4.8,{align:"center"});
+
+// Isi
+doc.setTextColor(0,0,0);
+
+// Garis TTD
+doc.line(128,y+20,172,y+20);
+
+// Nama
+doc.setFont("helvetica","bold");
+doc.setFontSize(9);
+doc.text(input,150,y+27,{align:"center"});
+
+        doc.save("Random_Stok_Gudang_Farmasi.pdf");
+}
+</script>
+
+</body>
+</html>
